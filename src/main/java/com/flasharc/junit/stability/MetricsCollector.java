@@ -47,7 +47,7 @@ public class MetricsCollector implements TestRule {
 				}
 				for (Metric metric : metrics) {
 					try {
-						metric.processResults();
+						metric.getResults();
 					} catch (Throwable e) {
 						// Ignore.
 					}
