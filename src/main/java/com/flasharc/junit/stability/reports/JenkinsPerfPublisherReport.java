@@ -57,12 +57,14 @@ public class JenkinsPerfPublisherReport {
 			xmlSerializer.endTag(null, "success");
 			
 			xmlSerializer.startTag(null, "metrics");
-			for (Metric.MetricResult metric : metrics) {
-				xmlSerializer.startTag(null, metric.getMetricType())
-							 .attribute(null, "unit", metric.getMetricUnit())
-							 .attribute(null, "mesure", Double.toString(metric.getMetricValue()))
-							 .attribute(null, "isRelevant", "true")
-							 .endTag(null, metric.getMetricType());
+			if (metrics != null) {
+				for (Metric.MetricResult metric : metrics) {
+					xmlSerializer.startTag(null, metric.getMetricType())
+								 .attribute(null, "unit", metric.getMetricUnit())
+								 .attribute(null, "mesure", Double.toString(metric.getMetricValue()))
+								 .attribute(null, "isRelevant", "true")
+								 .endTag(null, metric.getMetricType());
+				}
 			}
 			xmlSerializer.endTag(null, "metrics");
 			
