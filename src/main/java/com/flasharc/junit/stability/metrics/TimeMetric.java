@@ -29,7 +29,7 @@ public class TimeMetric implements Metric {
 	private static class TimeMetricResult implements MetricResult {
 		
 		private static final String METRIC_TYPE = "TimeTaken";
-		private static final String METRIC_UNIT = "NanoSeconds";
+		private static final String METRIC_UNIT = "ns";
 		
 		private final double timeTakenNs;
 		

@@ -15,8 +15,8 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportGeneration() throws Exception {
 		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer, "Junit Testing");
-		publisher.startReport("junittestReport");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		publisher.startReport("junittestReport", "Junit Testing");
 		publisher.finishReport();
 		
 		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\" />";
@@ -26,8 +26,8 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithNoMetrics() throws Exception {
 		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer, "Junit Testing");
-		publisher.startReport("junittestReport");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		publisher.startReport("junittestReport", "Junit Testing");
 		publisher.reportTest("nometricstest", Collections.<Metric.MetricResult>emptyList());
 		publisher.finishReport();
 
@@ -38,8 +38,8 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithNullMetrics() throws Exception {
 		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer, "Junit Testing");
-		publisher.startReport("junittestReport");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", null);
 		publisher.finishReport();
 
@@ -50,8 +50,8 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithMetrics() throws Exception {
 		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer, "Junit Testing");
-		publisher.startReport("junittestReport");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 12440)));
 		publisher.finishReport();
 

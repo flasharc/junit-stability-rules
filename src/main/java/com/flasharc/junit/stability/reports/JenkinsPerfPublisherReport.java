@@ -11,31 +11,32 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import com.flasharc.junit.stability.Metric;
+import com.flasharc.junit.stability.Reporter;
 
-public class JenkinsPerfPublisherReport {
+public class JenkinsPerfPublisherReport implements Reporter {
 	
 	private final Writer reportWriter;
 	private final XmlSerializer xmlSerializer;
-	private final String environment;
 	
-	public JenkinsPerfPublisherReport(File reportFile, String environment) throws IOException, XmlPullParserException {
-		this(new FileWriter(reportFile), environment);
+	public JenkinsPerfPublisherReport(File reportFile) throws IOException, XmlPullParserException {
+		this(new FileWriter(reportFile));
 	}
 	
-	public JenkinsPerfPublisherReport(Writer reportWriter, String environment) throws XmlPullParserException, IllegalArgumentException, IllegalStateException, IOException {
+	public JenkinsPerfPublisherReport(Writer reportWriter) throws XmlPullParserException, IllegalArgumentException, IllegalStateException, IOException {
 		xmlSerializer = new KXmlSerializer();;
 		xmlSerializer.setOutput(reportWriter);
-		this.environment = environment;
 		this.reportWriter = reportWriter;
 	}
-	
-	public void startReport(String reportName) throws Exception {
+
+	@Override
+	public void startReport(String reportName, String environment) throws Exception {
 		xmlSerializer.startDocument(null, null);
 		xmlSerializer.startTag(null, "report");
 		xmlSerializer.attribute(null, "name", reportName);
 		xmlSerializer.attribute(null, "categ", environment);
 	}
 	
+	@Override
 	public void finishReport() throws Exception {
 		try {
 			xmlSerializer.endTag(null, "report");
@@ -46,6 +47,7 @@ public class JenkinsPerfPublisherReport {
 		}
 	}
 
+	@Override
 	public void reportTest(String testName, List<Metric.MetricResult> metrics) throws Exception {
 		xmlSerializer.startTag(null, "test");
 		try {

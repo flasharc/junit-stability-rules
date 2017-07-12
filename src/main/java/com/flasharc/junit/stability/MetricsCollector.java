@@ -1,29 +1,35 @@
 package com.flasharc.junit.stability;
 
+import java.util.ArrayList;
+
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class MetricsCollector implements TestRule {
 	private final Metric[] metrics;
+	private final Reporter reporter;
 
-	public MetricsCollector(Metric... metrics) {
+	public MetricsCollector(Reporter reporter, Metric... metrics) {
 		if (metrics == null) {
 			throw new NullPointerException("No metrics defined");
 		}
 		this.metrics = metrics;
+		this.reporter = reporter;
 	}
 
 	@Override
 	public Statement apply(Statement base, Description description) {
-		return new MetricsCollectedStatement(base);
+		return new MetricsCollectedStatement(base, description.getDisplayName());
 	}
 
 	private class MetricsCollectedStatement extends Statement {
 		private final Statement base;
+		private final String testName;
 
-		private MetricsCollectedStatement(Statement base) {
+		private MetricsCollectedStatement(Statement base, String testName) {
 			this.base = base;
+			this.testName = testName;
 		}
 
 		@Override
@@ -45,12 +51,18 @@ public class MetricsCollector implements TestRule {
 						// Ignore.
 					}
 				}
+				ArrayList<Metric.MetricResult> results = new ArrayList<>();
 				for (Metric metric : metrics) {
 					try {
-						metric.getResults();
+						results.addAll(metric.getResults());
 					} catch (Throwable e) {
 						// Ignore.
 					}
+				}
+				try {
+					reporter.reportTest(testName, results);
+				} catch (Throwable e) {
+					// Ignore.
 				}
 			}
 		}
