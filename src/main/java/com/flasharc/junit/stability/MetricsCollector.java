@@ -44,9 +44,9 @@ public class MetricsCollector implements TestRule {
 			try {
 				base.evaluate();
 			} finally {
-				for (Metric metric : metrics) {
+				for (int i = metrics.length; i > 0; i--) { // This is to iterate in the reverse order.
 					try {
-						metric.onRunFinish();
+						metrics[i - 1].onRunFinish();
 					} catch (Throwable e) {
 						// Ignore.
 					}

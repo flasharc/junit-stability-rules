@@ -1,5 +1,6 @@
 repositories {
 	jcenter()
+	google()
 }
 
 apply plugin: 'java-library'
@@ -7,6 +8,8 @@ apply plugin: 'java-library'
 dependencies {
 	api 'junit:junit:4.12'
 	implementation 'net.sf.kxml:kxml2:2.3.0'
+	compileOnly 'com.google.android:android:4.1.1.4'
+	compileOnly fileTree(dir: 'libs', include: '*.jar')
 }
 
 sourceCompatibility = '1.7'
