@@ -18,11 +18,11 @@ public class JenkinsPerfPublisherReport implements Reporter {
 	private final Writer reportWriter;
 	private final XmlSerializer xmlSerializer;
 	
-	public JenkinsPerfPublisherReport(File reportFile) throws IOException, XmlPullParserException {
+	public JenkinsPerfPublisherReport(File reportFile) throws IOException {
 		this(new FileWriter(reportFile));
 	}
 	
-	public JenkinsPerfPublisherReport(Writer reportWriter) throws XmlPullParserException, IllegalArgumentException, IllegalStateException, IOException {
+	public JenkinsPerfPublisherReport(Writer reportWriter) throws IllegalArgumentException, IllegalStateException, IOException {
 		xmlSerializer = new KXmlSerializer();;
 		xmlSerializer.setOutput(reportWriter);
 		this.reportWriter = reportWriter;
