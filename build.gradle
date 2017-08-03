@@ -6,6 +6,9 @@ repositories {
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
+project.version = '1.0'
+project.group = 'io.flasharc'
+
 dependencies {
 	api 'junit:junit:4.12'
 	implementation 'net.sf.kxml:kxml2:2.3.0'
