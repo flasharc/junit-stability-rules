@@ -68,8 +68,8 @@ public class MemoryMetric implements Metric {
 		maxMemoryUsage = avgMemoryUsage = count = 0;
 		
 		return Arrays.<MetricResult>asList(
-				new MemoryMetricResult("Max Memory", maxMem),
-				new MemoryMetricResult("Avg Memory", avgMem));
+				new MemoryMetricResult("Max_Memory", maxMem),
+				new MemoryMetricResult("Avg_Memory", avgMem));
 	}
 
 	private static class MemoryMetricResult implements MetricResult {

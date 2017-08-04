@@ -28,7 +28,7 @@ public class TimeMetric implements Metric {
 	
 	private static class TimeMetricResult implements MetricResult {
 		
-		private static final String METRIC_TYPE = "TimeTaken";
+		private static final String METRIC_TYPE = "Time_Taken";
 		private static final String METRIC_UNIT = "ns";
 		
 		private final double timeTakenNs;

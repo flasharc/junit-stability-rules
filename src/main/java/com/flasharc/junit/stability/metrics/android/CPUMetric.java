@@ -54,7 +54,7 @@ public class CPUMetric implements Metric {
 
 	private static class CpuMetricResult implements MetricResult {
 		
-		private static final String METRIC_TYPE = "CPU Jiffies";
+		private static final String METRIC_TYPE = "CPU_Jiffies";
 		private static final String METRIC_UNIT = "jiffy";
 		
 		private final double cpuJiffes;

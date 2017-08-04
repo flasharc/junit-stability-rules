@@ -22,7 +22,7 @@ public class MetricsCollector implements TestRule {
 	public Statement apply(Statement base, Description description) {
 		return new MetricsCollectedStatement(base, description.getDisplayName());
 	}
-
+	
 	private class MetricsCollectedStatement extends Statement {
 		private final Statement base;
 		private final String testName;

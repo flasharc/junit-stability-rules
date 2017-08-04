@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.util.List;
 
 import org.kxml2.io.KXmlSerializer;
-import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import com.flasharc.junit.stability.Metric;
@@ -37,6 +36,12 @@ public class JenkinsPerfPublisherReport implements Reporter {
 	}
 	
 	@Override
+	public void finalize() throws Exception {
+		finishReport();
+	}
+	
+	@Override
+	//XXX NOTE: This is not called reliably.
 	public void finishReport() throws Exception {
 		try {
 			xmlSerializer.endTag(null, "report");
@@ -73,6 +78,7 @@ public class JenkinsPerfPublisherReport implements Reporter {
 			xmlSerializer.endTag(null, "result");
 		} finally {
 			xmlSerializer.endTag(null, "test");
+			xmlSerializer.flush();
 		}
 	}
 	
