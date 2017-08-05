@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlSerializer;
 import com.flasharc.junit.stability.Metric;
 import com.flasharc.junit.stability.Reporter;
 
+@Deprecated
 public class JenkinsPerfPublisherReport implements Reporter {
 	
 	private final Writer reportWriter;
@@ -37,12 +38,6 @@ public class JenkinsPerfPublisherReport implements Reporter {
 	
 	@Override
 	public void finalize() throws Exception {
-		finishReport();
-	}
-	
-	@Override
-	//XXX NOTE: This is not called reliably.
-	public void finishReport() throws Exception {
 		try {
 			xmlSerializer.endTag(null, "report");
 			xmlSerializer.endDocument();
@@ -51,7 +46,7 @@ public class JenkinsPerfPublisherReport implements Reporter {
 			reportWriter.close();
 		}
 	}
-
+	
 	@Override
 	public void reportTest(String testName, List<Metric.MetricResult> metrics) throws Exception {
 		xmlSerializer.startTag(null, "test");

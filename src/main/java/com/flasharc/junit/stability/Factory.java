@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.flasharc.junit.stability.reports.JenkinsPerfPublisherReport;
+import com.flasharc.junit.stability.reports.JMHJsonReporter;
 
 public final class Factory {
 	private static final String PROPERTIES_FILE = "/stability-test-config.prop";
@@ -41,7 +41,7 @@ public final class Factory {
 			reportFile.getParentFile().mkdirs();
 			
 			try {
-				reporter = new JenkinsPerfPublisherReport(reportFile);
+				reporter = new JMHJsonReporter(reportFile);
 				reporter.startReport(properties.getProperty(PROP_REPORT_NAME), ENVIRONMENT);
 			} catch (Exception e) {
 				throw new IllegalStateException("Unable to write to report file", e);

@@ -17,7 +17,6 @@ public class JenkinsPerfPublisherReportTest {
 		StringWriter writer = new StringWriter();
 		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
 		publisher.startReport("junittestReport", "Junit Testing");
-		publisher.finishReport();
 		
 		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\" />";
 		assertEquals(expectedString, writer.toString());
@@ -29,7 +28,6 @@ public class JenkinsPerfPublisherReportTest {
 		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
 		publisher.startReport("junittestReport", "Junit Testing");
 		publisher.reportTest("nometricstest", Collections.<Metric.MetricResult>emptyList());
-		publisher.finishReport();
 
 		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\"><test name=\"nometricstest\" executed=\"yes\"><result><success passed=\"yes\" state=\"100\" /><metrics /></result></test></report>";
 		assertEquals(expectedString, writer.toString());
@@ -41,7 +39,6 @@ public class JenkinsPerfPublisherReportTest {
 		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", null);
-		publisher.finishReport();
 
 		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\"><test name=\"nometricstest\" executed=\"yes\"><result><success passed=\"yes\" state=\"100\" /><metrics /></result></test></report>";
 		assertEquals(expectedString, writer.toString());
@@ -53,7 +50,6 @@ public class JenkinsPerfPublisherReportTest {
 		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 12440)));
-		publisher.finishReport();
 
 		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\"><test name=\"nometricstest\" executed=\"yes\"><result><success passed=\"yes\" state=\"100\" /><metrics><time unit=\"ns\" mesure=\"12440.0\" isRelevant=\"true\" /></metrics></result></test></report>";
 		assertEquals(expectedString, writer.toString());
