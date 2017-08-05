@@ -11,8 +11,6 @@ public final class Factory {
 	private static final String PROP_REPORT_PATH = "reportPath";
 	private static final String PROP_REPORT_NAME = "reportName";
 	
-	private static final String ENVIRONMENT = android.os.Build.MODEL;
-
 	private Factory(){}
 	private static Properties properties = new Properties();
 	private static Reporter reporter;
@@ -42,7 +40,6 @@ public final class Factory {
 			
 			try {
 				reporter = new JMHJsonReporter(reportFile);
-				reporter.startReport(properties.getProperty(PROP_REPORT_NAME), ENVIRONMENT);
 			} catch (Exception e) {
 				throw new IllegalStateException("Unable to write to report file", e);
 			}
