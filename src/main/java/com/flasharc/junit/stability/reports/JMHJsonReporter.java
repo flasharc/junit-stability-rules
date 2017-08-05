@@ -31,9 +31,9 @@ public class JMHJsonReporter implements Reporter {
 				content = "[" + content + "]";
 			} else {
 				raf.seek(len - 1);
-				content = "," + content;
+				content = "," + content + "]";
 			}
-			raf.writeChars(content);
+			raf.writeBytes(content);
 		} finally {
 			raf.close();
 		}
@@ -72,7 +72,7 @@ public class JMHJsonReporter implements Reporter {
 			Pattern pattern = Pattern.compile("(.*)\\((.*)\\)");
 			Matcher matcher = pattern.matcher(testName);
 			matcher.find();
-			testName = matcher.group(2).trim() + matcher.group(1).trim();
+			testName = matcher.group(2).trim() + "." + matcher.group(1).trim();
 		} catch (Exception e) {
 			// catch all exception.
 		}
