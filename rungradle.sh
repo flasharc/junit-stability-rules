@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ev
 if [ -z "${TRAVIS_TAG}" ]; then
-	./gradlew build publish bintrayUpload
+	./gradlew build
 else
-    ./gradlew build
+    ./gradlew build publish bintrayUpload
 fi
