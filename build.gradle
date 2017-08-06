@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
 }
 repositories {
 	jcenter()
@@ -12,7 +13,7 @@ repositories {
 
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrom.bintray'
+apply plugin: 'com.jfrog.bintray'
 
 project.version = '0.1'
 project.group = 'io.flasharc'
@@ -44,9 +45,9 @@ publishing {
     publications {
     	mavenJava(MavenPublication) {
       		from components.java
+            artifact javadocJar
+            artifact sourcesJar
     	}
-        artifact javadocJar
-        artifact sourcesJar
   	}
 }
 
@@ -58,7 +59,10 @@ bintray {
     pkg {
         repo = project.name
         name = project.name
-        
+        userOrg = 'flasharc'
+        vcsUrl = 'https://github.com/flasharc/junit-stability-rules.git'
+        licenses = ['GPL-3.0']
+
         version {
             name = project.version
         }
