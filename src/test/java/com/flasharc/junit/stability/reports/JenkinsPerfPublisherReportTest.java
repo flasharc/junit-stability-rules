@@ -2,7 +2,10 @@ package com.flasharc.junit.stability.reports;
 
 import static org.junit.Assert.*;
 
-import java.io.StringWriter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -11,52 +14,74 @@ import org.junit.Test;
 import com.flasharc.junit.stability.Metric;
 
 public class JenkinsPerfPublisherReportTest {
+	
+	private String readFileContent(File file) throws IOException {
+		StringBuilder content = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		try {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				content.append(line).append("\n");
+			}
+		} finally {
+			reader.close();
+		}
+		return content.toString();
+	}
 
 	@Test
 	public void testReportGeneration() throws Exception {
-		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		File file = File.createTempFile("jmh", "test");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
 		publisher.startReport("junittestReport", "Junit Testing");
-		publisher.finalize();
 		
-		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\" />";
-		assertEquals(expectedString, writer.toString());
+		String expectedString = "<?xml version='1.0' ?><report categ=\"Junit Testing\" name=\"junittestReport\"></report>\n";
+		assertEquals(expectedString, readFileContent(file));
 	}
 
 	@Test
 	public void testReportWithNoMetrics() throws Exception {
-		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		File file = File.createTempFile("jmh", "test");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
 		publisher.startReport("junittestReport", "Junit Testing");
 		publisher.reportTest("nometricstest", Collections.<Metric.MetricResult>emptyList());
-		publisher.finalize();
 
-		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\"><test name=\"nometricstest\" executed=\"yes\"><result><success passed=\"yes\" state=\"100\" /><metrics /></result></test></report>";
-		assertEquals(expectedString, writer.toString());
+		String expectedString = "<?xml version='1.0' ?><report categ=\"Junit Testing\" name=\"junittestReport\"><test executed=\"yes\" name=\"nometricstest\"><result><success passed=\"yes\" state=\"100\"></success><metrics></metrics></result></test></report>\n";
+		assertEquals(expectedString, readFileContent(file));
 	}
 	
 	@Test
 	public void testReportWithNullMetrics() throws Exception {
-		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		File file = File.createTempFile("jmh", "test");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", null);
-		publisher.finalize();
 
-		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\"><test name=\"nometricstest\" executed=\"yes\"><result><success passed=\"yes\" state=\"100\" /><metrics /></result></test></report>";
-		assertEquals(expectedString, writer.toString());
+		String expectedString = "<?xml version='1.0' ?><report categ=\"Junit Testing\" name=\"junittestReport\"><test executed=\"yes\" name=\"nometricstest\"><result><success passed=\"yes\" state=\"100\"></success><metrics></metrics></result></test></report>\n";
+		assertEquals(expectedString, readFileContent(file));
 	}
 
 	@Test
 	public void testReportWithMetrics() throws Exception {
-		StringWriter writer = new StringWriter();
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(writer);
+		File file = File.createTempFile("jmh", "test");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 12440)));
-		publisher.finalize();
 
-		String expectedString = "<?xml version='1.0' ?><report name=\"junittestReport\" categ=\"Junit Testing\"><test name=\"nometricstest\" executed=\"yes\"><result><success passed=\"yes\" state=\"100\" /><metrics><time unit=\"ns\" mesure=\"12440.0\" isRelevant=\"true\" /></metrics></result></test></report>";
-		assertEquals(expectedString, writer.toString());
+		String expectedString = "<?xml version='1.0' ?><report categ=\"Junit Testing\" name=\"junittestReport\"><test executed=\"yes\" name=\"nometricstest\"><result><success passed=\"yes\" state=\"100\"></success><metrics><time isRelevant=\"true\" mesure=\"12440.0\" unit=\"ns\"></time></metrics></result></test></report>\n";
+		assertEquals(expectedString, readFileContent(file));
+	}
+	
+	@Test
+	public void testReportWithMultipleTests() throws Exception {
+		File file = File.createTempFile("jmh", "test");
+		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
+		publisher.startReport("junittestReport","Junit Testing");
+		publisher.reportTest("nometricstest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 12440)));
+		publisher.reportTest("secondtest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 821)));
+
+		String expectedString = "<?xml version='1.0' ?><report categ=\"Junit Testing\" name=\"junittestReport\"><test executed=\"yes\" name=\"nometricstest\"><result><success passed=\"yes\" state=\"100\"></success><metrics><time isRelevant=\"true\" mesure=\"12440.0\" unit=\"ns\"></time></metrics></result></test><test executed=\"yes\" name=\"secondtest\"><result><success passed=\"yes\" state=\"100\"></success><metrics><time isRelevant=\"true\" mesure=\"821.0\" unit=\"ns\"></time></metrics></result></test></report>\n";
+		assertEquals(expectedString, readFileContent(file));
 	}
 	
 	private static class MetricResultImpl implements Metric.MetricResult {
