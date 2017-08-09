@@ -15,12 +15,11 @@ apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-project.version = '0.1'
+project.version = '0.2'
 project.group = 'io.flasharc'
 
 dependencies {
 	api 'junit:junit:4.12'
-	implementation 'net.sf.kxml:kxml2:2.3.0'
 	implementation 'com.google.code.gson:gson:2.8.1'
 	
 	compileOnly 'com.google.android:android:4.1.1.4'

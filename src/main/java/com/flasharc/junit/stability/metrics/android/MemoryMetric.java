@@ -14,7 +14,8 @@ import android.os.Debug.MemoryInfo;
 import android.support.test.InstrumentationRegistry;
 
 public class MemoryMetric implements Metric {
-	private final MemoryInfo memInfo;
+	private final int pid;
+	private final ActivityManager manager;
 	private final Timer timer;
 	private TimerTask timerTask;
 	
@@ -23,7 +24,7 @@ public class MemoryMetric implements Metric {
 	private int count;
 	
 	public MemoryMetric() {
-		ActivityManager manager = (ActivityManager) InstrumentationRegistry.getTargetContext().getSystemService(Context.ACTIVITY_SERVICE);
+		manager = (ActivityManager) InstrumentationRegistry.getTargetContext().getSystemService(Context.ACTIVITY_SERVICE);
 		int pid = -1;
 		for (RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
 			if (processInfo.processName.equals(InstrumentationRegistry.getTargetContext().getPackageName())) {
@@ -34,8 +35,9 @@ public class MemoryMetric implements Metric {
 		
 		if (pid == -1) {
 			throw new IllegalStateException("Cannot retrieve the PID of the target app");
+		} else {
+			this.pid = pid;
 		}
-		memInfo = manager.getProcessMemoryInfo(new int[] {pid})[0];
 		timer = new Timer(true);
 	}
 
@@ -44,6 +46,7 @@ public class MemoryMetric implements Metric {
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
+				MemoryInfo memInfo = manager.getProcessMemoryInfo(new int[] {pid})[0];
 				int memory = memInfo.getTotalPss();
 				if (memory > maxMemoryUsage) {
 					maxMemoryUsage = memory;
