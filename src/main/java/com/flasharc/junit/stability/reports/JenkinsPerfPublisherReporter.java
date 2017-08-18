@@ -22,22 +22,23 @@ import org.w3c.dom.Node;
 import com.flasharc.junit.stability.Metric;
 import com.flasharc.junit.stability.Reporter;
 
-public class JenkinsPerfPublisherReport implements Reporter {
-	
+public class JenkinsPerfPublisherReporter implements Reporter {
+
 	private final File reportFile;
 	private final Transformer transformer;
 	private final Document document;
-	
-	
-	public JenkinsPerfPublisherReport(File reportFile) throws IOException {
-		reportFile.getParentFile().mkdirs();
+
+	public JenkinsPerfPublisherReporter(File reportFile) throws IOException {
 		this.reportFile = reportFile;
 		try {
 			transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "no");
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-			transformer.setOutputProperty(OutputKeys.METHOD, "html"); // To avoid self-closing tags.
-			
+			transformer.setOutputProperty(OutputKeys.METHOD, "html"); // To
+																		// avoid
+																		// self-closing
+																		// tags.
+
 			DocumentBuilderFactory iFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = iFactory.newDocumentBuilder();
 			document = builder.newDocument();
@@ -47,7 +48,7 @@ public class JenkinsPerfPublisherReport implements Reporter {
 			throw new IOException(e);
 		}
 	}
-	
+
 	private void writeToReport(Node content) throws IOException, TransformerException {
 		RandomAccessFile raf = new RandomAccessFile(reportFile, "rwd");
 		final String finishTag = "</report>";
@@ -58,30 +59,32 @@ public class JenkinsPerfPublisherReport implements Reporter {
 			} else {
 				raf.seek(len - finishTag.length());
 			}
-			
+
 			StringWriter stringWriter = new StringWriter();
 			StreamResult result = new StreamResult(stringWriter);
 			DOMSource source = new DOMSource(content);
 			transformer.transform(source, result);
-			
+
 			if (len != 0) {
 				stringWriter.append(finishTag);
 			}
-			
+
 			raf.writeBytes(stringWriter.toString());
 		} finally {
 			raf.close();
 		}
 	}
-	
+
 	@Override
 	public void startReport(String reportName, String environment) throws Exception {
-		Element element = document.createElement("report");
-		element.setAttribute("name", reportName);
-		element.setAttribute("categ", environment);
-		writeToReport(element);
+		if (reportFile.length() == 0) {
+			Element element = document.createElement("report");
+			element.setAttribute("name", reportName);
+			element.setAttribute("categ", environment);
+			writeToReport(element);
+		}
 	}
-	
+
 	@Override
 	public void reportTest(String testName, List<Metric.MetricResult> metrics) throws Exception {
 		Element testElement = document.createElement("test");

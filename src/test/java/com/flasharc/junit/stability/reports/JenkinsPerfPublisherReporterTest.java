@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.flasharc.junit.stability.Metric;
 
-public class JenkinsPerfPublisherReportTest {
+public class JenkinsPerfPublisherReporterTest {
 	
 	private String readFileContent(File file) throws IOException {
 		StringBuilder content = new StringBuilder();
@@ -32,7 +32,7 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportGeneration() throws Exception {
 		File file = File.createTempFile("jmh", "test");
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
+		JenkinsPerfPublisherReporter publisher = new JenkinsPerfPublisherReporter(file);
 		publisher.startReport("junittestReport", "Junit Testing");
 		
 		String expectedString = "<?xml version='1.0' ?><report categ=\"Junit Testing\" name=\"junittestReport\"></report>\n";
@@ -42,7 +42,7 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithNoMetrics() throws Exception {
 		File file = File.createTempFile("jmh", "test");
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
+		JenkinsPerfPublisherReporter publisher = new JenkinsPerfPublisherReporter(file);
 		publisher.startReport("junittestReport", "Junit Testing");
 		publisher.reportTest("nometricstest", Collections.<Metric.MetricResult>emptyList());
 
@@ -53,7 +53,7 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithNullMetrics() throws Exception {
 		File file = File.createTempFile("jmh", "test");
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
+		JenkinsPerfPublisherReporter publisher = new JenkinsPerfPublisherReporter(file);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", null);
 
@@ -64,7 +64,7 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithMetrics() throws Exception {
 		File file = File.createTempFile("jmh", "test");
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
+		JenkinsPerfPublisherReporter publisher = new JenkinsPerfPublisherReporter(file);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 12440)));
 
@@ -75,7 +75,7 @@ public class JenkinsPerfPublisherReportTest {
 	@Test
 	public void testReportWithMultipleTests() throws Exception {
 		File file = File.createTempFile("jmh", "test");
-		JenkinsPerfPublisherReport publisher = new JenkinsPerfPublisherReport(file);
+		JenkinsPerfPublisherReporter publisher = new JenkinsPerfPublisherReporter(file);
 		publisher.startReport("junittestReport","Junit Testing");
 		publisher.reportTest("nometricstest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 12440)));
 		publisher.reportTest("secondtest", Arrays.<Metric.MetricResult>asList(new MetricResultImpl("time", "ns", 821)));

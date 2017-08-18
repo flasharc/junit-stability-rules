@@ -19,7 +19,6 @@ public class JMHJsonReporter implements Reporter {
 	private final File reportFile;
 	
 	public JMHJsonReporter(File reportFile) throws IOException {
-		reportFile.getParentFile().mkdirs();
 		this.reportFile = reportFile;
 	}
 	
