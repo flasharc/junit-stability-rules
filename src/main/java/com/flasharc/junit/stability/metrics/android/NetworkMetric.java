@@ -32,10 +32,10 @@ public class NetworkMetric implements Metric {
 	}
 
 	@Override
-	public List<MetricResult> getResults() {
+	public List<MetricResult> getResults(int loops) {
 		return Arrays.<MetricResult>asList(
-				new NetworkMetricResult("Data_Transmitted", (endTxBytes - startTxBytes)),
-				new NetworkMetricResult("Data_Received", (endRxBytes - startRxBytes)));
+				new NetworkMetricResult("Data_Transmitted", (endTxBytes - startTxBytes)/loops),
+				new NetworkMetricResult("Data_Received", (endRxBytes - startRxBytes)/loops));
 	}
 
 	private static class NetworkMetricResult implements MetricResult {

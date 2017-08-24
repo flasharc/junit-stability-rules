@@ -20,20 +20,34 @@ public class MetricsCollector implements TestRule {
 
 	@Override
 	public Statement apply(Statement base, Description description) {
-		return new MetricsCollectedStatement(base, description.getDisplayName());
+		return new MetricsCollectedStatement(base, description);
 	}
 	
 	private class MetricsCollectedStatement extends Statement {
 		private final Statement base;
 		private final String testName;
+		private final int rampUps;
+		private final int loops;
 
-		private MetricsCollectedStatement(Statement base, String testName) {
+		private MetricsCollectedStatement(Statement base, Description description) {
 			this.base = base;
-			this.testName = testName;
+			this.testName = description.getDisplayName();
+			Repeat repeat = description.getAnnotation(Repeat.class);
+			if (repeat != null) {
+				this.rampUps = repeat.rampUps();
+				this.loops = repeat.loops();
+			} else {
+				this.rampUps = 0;
+				this.loops = 1;
+			}
 		}
 
 		@Override
 		public void evaluate() throws Throwable {
+			for (int i = 0; i < rampUps; i++) {
+				base.evaluate();
+			}
+			
 			for (Metric metric : metrics) {
 				try {
 					metric.onRunStart();
@@ -42,7 +56,9 @@ public class MetricsCollector implements TestRule {
 				}
 			}
 			try {
-				base.evaluate();
+				for (int i = 0; i < loops; i++) {
+					base.evaluate();
+				}
 			} finally {
 				for (int i = metrics.length; i > 0; i--) { // This is to iterate in the reverse order.
 					try {
@@ -54,7 +70,7 @@ public class MetricsCollector implements TestRule {
 				ArrayList<Metric.MetricResult> results = new ArrayList<>();
 				for (Metric metric : metrics) {
 					try {
-						results.addAll(metric.getResults());
+						results.addAll(metric.getResults(loops));
 					} catch (Throwable e) {
 						// Ignore.
 					}

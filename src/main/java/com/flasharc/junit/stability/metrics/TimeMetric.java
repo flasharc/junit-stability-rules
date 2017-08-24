@@ -21,8 +21,8 @@ public class TimeMetric implements Metric {
 	}
 
 	@Override
-	public List<MetricResult> getResults() {
-		long timeTaken = endTime - startTime;
+	public List<MetricResult> getResults(int loops) {
+		long timeTaken = (endTime - startTime)/loops;
 		return Collections.<MetricResult>singletonList(new TimeMetricResult(timeTaken));
 	}
 	

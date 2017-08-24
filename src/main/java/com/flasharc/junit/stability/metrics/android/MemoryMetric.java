@@ -64,7 +64,7 @@ public class MemoryMetric implements Metric {
 	}
 
 	@Override
-	public List<MetricResult> getResults() {
+	public List<MetricResult> getResults(int loops) {
 		double maxMem = maxMemoryUsage;
 		double avgMem = avgMemoryUsage;
 		

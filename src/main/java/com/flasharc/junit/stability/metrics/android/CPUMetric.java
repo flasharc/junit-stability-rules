@@ -48,8 +48,8 @@ public class CPUMetric implements Metric {
 	}
 
 	@Override
-	public List<MetricResult> getResults() {
-		return Collections.<MetricResult>singletonList(new CpuMetricResult(endCpuJiffies - startCpuJiffies));
+	public List<MetricResult> getResults(int loops) {
+		return Collections.<MetricResult>singletonList(new CpuMetricResult((endCpuJiffies - startCpuJiffies)/loops));
 	}
 
 	private static class CpuMetricResult implements MetricResult {
